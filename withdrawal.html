@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdraw Funds</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      padding: 2rem;
+    }
+
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input, button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 90%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #6200ea;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Withdraw Funds</h2>
+    <p><strong>Processing Time:</strong> 12 to 24 hours</p>
+
+    <h3>Enter Withdrawal Details</h3>
+    <input type="text" id="phone-number" placeholder="Enter MPESA phone number">
+    <input type="number" id="withdraw-amount" placeholder="Enter amount (KES)" min="100">
+    <button onclick="processWithdrawal()">Withdraw</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    function processWithdrawal() {
+      let phone = document.getElementById('phone-number').value.trim();
+      let amount = parseFloat(document.getElementById('withdraw-amount').value);
+      let message = document.getElementById('message');
+      let balance = parseFloat(localStorage.getItem('balance')) || 0;
+
+      if (!phone || !phone.match(/^07\d{8}$/)) {
+        message.textContent = "Please enter a valid MPESA phone number (07XXXXXXXX).";
+        return;
+      }
+
+      if (isNaN(amount) || amount < 100) {
+        message.textContent = "Minimum withdrawal is 100 KES.";
+        return;
+      }
+
+      if (amount > balance) {
+        message.textContent = "Insufficient balance.";
+        return;
+      }
+
+      balance -= amount;
+      localStorage.setItem('balance', balance.toFixed(2));
+
+      message.textContent = `Success! KES ${amount} will be sent to ${phone} within 12 to 24 hours.`;
+      document.getElementById('phone-number').value = "";
+      document.getElementById('withdraw-amount').value = "";
+    }
+  </script>
+
+</body>
+</html>
