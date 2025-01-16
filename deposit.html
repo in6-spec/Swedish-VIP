@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deposit</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      padding: 2rem;
+    }
+
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input, button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 90%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #6200ea;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Deposit Funds</h2>
+    <p><strong>Minimum Deposit:</strong> KES 500</p>
+    <p><strong>Maximum Deposit:</strong> KES 500,000</p>
+    <p>Send money via MPESA to this phone number:</p>
+    <h3>+254 7XX XXX XXX</h3>
+
+    <h3>Enter Deposit Details</h3>
+    <input type="number" id="deposit-amount" placeholder="Enter amount (KES)" min="500" max="500000">
+    <input type="text" id="mpesa-code" placeholder="Enter MPESA transaction code">
+    <button onclick="processDeposit()">Deposit</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    function processDeposit() {
+      let amount = parseFloat(document.getElementById('deposit-amount').value);
+      let code = document.getElementById('mpesa-code').value.trim();
+      let message = document.getElementById('message');
+
+      if (isNaN(amount) || amount < 500 || amount > 500000) {
+        message.textContent = "Please enter an amount between 500 and 500,000 KES.";
+        return;
+      }
+
+      if (!code || code.length < 6) {
+        message.textContent = "Please enter a valid MPESA transaction code.";
+        return;
+      }
+
+      let balance = parseFloat(localStorage.getItem('balance')) || 0;
+      balance += amount;
+      localStorage.setItem('balance', balance.toFixed(2));
+
+      message.textContent = `Success! KES ${amount} has been added to your balance.`;
+      document.getElementById('deposit-amount').value = "";
+      document.getElementById('mpesa-code').value = "";
+    }
+  </script>
+
+</body>
+</html>
