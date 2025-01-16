@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Betting Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      padding: 2rem;
+    }
+
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    select, button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 90%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #6200ea;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Place Your Bet</h2>
+    <p id="login-message"></p>
+    <p id="signup-message"></p>
+
+    <h3>Select the Winning Horse</h3>
+    <select id="horse-selection">
+      <option value="">Select a horse</option>
+    </select>
+    <button onclick="placeBet()">Place Bet</button>
+    <p id="bet-message"></p>
+  </div>
+
+  <script>
+    function checkLogin() {
+      let lastLogin = localStorage.getItem('lastLogin');
+      let signupComplete = localStorage.getItem('signupComplete');
+
+      if (!lastLogin || (Date.now() - parseInt(lastLogin) > 24 * 60 * 60 * 1000)) {
+        localStorage.removeItem('lastLogin');
+        document.getElementById('login-message').innerHTML = "You must log in again.";
+        setTimeout(() => window.location.href = "login.html", 2000);
+      }
+
+      if (!signupComplete) {
+        document.getElementById('signup-message').innerHTML = "You must complete sign-up before betting.";
+        document.querySelector("button").disabled = true;
+      }
+    }
+
+    function placeBet() {
+      let selectedHorse = document.getElementById("horse-selection").value;
+      if (!selectedHorse) {
+        document.getElementById("bet-message").textContent = "Please select a horse before placing a bet.";
+        return;
+      }
+
+      document.getElementById("bet-message").textContent = "Bet placed successfully! The result will be available in a few hours.";
+    }
+
+    function loadHorses() {
+      let horseSelection = document.getElementById("horse-selection");
+      let horses = ["Thunder", "Lightning", "Storm", "Shadow", "Blaze", "Comet", "Wind", "Fire"];
+      let randomCount = Math.floor(Math.random() * (horses.length - 5)) + 5;
+      let selectedHorses = horses.sort(() => 0.5 - Math.random()).slice(0, randomCount);
+
+      selectedHorses.forEach(horse => {
+        let option = document.createElement("option");
+        option.value = horse;
+        option.textContent = horse;
+        horseSelection.appendChild(option);
+      });
+    }
+
+    window.onload = function() {
+      checkLogin();
+      loadHorses();
+    };
+  </script>
+
+</body>
+</html>
