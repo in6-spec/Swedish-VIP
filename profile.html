@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      padding: 2rem;
+    }
+
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input, button {
+      margin-top: 10px;
+      padding: 10px;
+      width: 90%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #6200ea;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Profile</h2>
+    <p><strong>Username:</strong> <span id="username">Loading...</span></p>
+    <p><strong>Balance:</strong> KES <span id="balance">0.00</span></p>
+    <p><strong>Referral Code:</strong> <span id="referral-code">Generating...</span></p>
+
+    <h3>Enter Username of Someone Who Used Your Referral Code</h3>
+    <input type="text" id="referred-username" placeholder="Enter username">
+    <button onclick="applyReferralBonus()">Submit</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    function generateReferralCode() {
+      const storedCode = localStorage.getItem('referralCode');
+      if (storedCode) return storedCode;
+
+      const newCode = 'REF' + Math.floor(Math.random() * 100000);
+      localStorage.setItem('referralCode', newCode);
+      return newCode;
+    }
+
+    function applyReferralBonus() {
+      const inputUsername = document.getElementById('referred-username').value.trim();
+      if (!inputUsername) {
+        document.getElementById('message').textContent = "Please enter a valid username.";
+        return;
+      }
+
+      let usedUsernames = JSON.parse(localStorage.getItem('usedUsernames')) || [];
+      if (usedUsernames.includes(inputUsername)) {
+        document.getElementById('message').textContent = "This username has already been used for a referral.";
+        return;
+      }
+
+      let balance = parseFloat(localStorage.getItem('balance')) || 0;
+      let bonus = balance * 0.10;
+      balance += bonus;
+
+      localStorage.setItem('balance', balance.toFixed(2));
+      usedUsernames.push(inputUsername);
+      localStorage.setItem('usedUsernames', JSON.stringify(usedUsernames));
+
+      document.getElementById('balance').textContent = balance.toFixed(2);
+      document.getElementById('message').textContent = `Success! Your balance increased by 10% (${bonus.toFixed(2)} KES).`;
+    }
+
+    window.onload = function () {
+      document.getElementById('username').textContent = localStorage.getItem('username') || "Guest";
+      document.getElementById('balance').textContent = localStorage.getItem('balance') || "0.00";
+      document.getElementById('referral-code').textContent = generateReferralCode();
+    };
+  </script>
+
+</body>
+</html>
