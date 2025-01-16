@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    form {
+      margin: auto;
+      width: 50%;
+    }
+
+    form input {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 1rem;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 1rem;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .link {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sign Up</h1>
+  </header>
+
+  <main>
+    <form id="signup-form">
+      <h2>Create an Account</h2>
+      <input type="text" id="username" placeholder="Enter Username" required>
+      <input type="password" id="password" placeholder="Enter Password" required>
+      <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+      <input type="text" id="referral-code" placeholder="Enter Referral Code (Optional)">
+      <button type="button" id="signup-button">Sign Up</button>
+    </form>
+    <p class="link">Already have an account? <a href="login.html">Log in here</a>.</p>
+  </main>
+
+  <footer>
+    <p>&copy; 2005 Horse Betting</p>
+  </footer>
+
+  <script>
+    document.getElementById('signup-button').addEventListener('click', () => {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const referralCode = document.getElementById('referral-code').value;
+
+      if (!username || !password || !confirmPassword) {
+        alert('All fields except referral code are required.');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert('Passwords do not match.');
+        return;
+      }
+
+      let initialBalance = 0;
+
+      if (referralCode) {
+        // Assuming a valid referral code is always "REF123"
+        if (referralCode === 'REF123') {
+          initialBalance = 500;
+          alert('Referral code accepted! You have received 500 Kenyan Shillings.');
+        } else {
+          alert('Invalid referral code.');
+        }
+      }
+
+      // Store data for dynamic update
+      localStorage.setItem('username', username);
+      localStorage.setItem('balance', initialBalance);
+
+      alert('Account successfully created!');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
